@@ -155,164 +155,19 @@ Go语言主要有四种类型的声明语句：var、const、type和func，分�
 
 可以通过声明接口变量，编译期间验证结构体的对该接口实现情况的检查。
 
-```go
-package style
-
-import (
-    "fmt"
-    "github.com/stretchr/testify/assert"
-    "testing"
-)
-
-type Modifier interface {
-    change()
-}
-
-type S1 struct {
-    Value int
-}
-
-func (s S1) change() {
-    s.Value = s.Value + 1
-}
-
-type S2 struct {
-    Value int
-}
-
-func (s *S2) change() {
-    s.Value = s.Value + 1
-}
-
-func TestPointerToInterface(t *testing.T) {
-    var s1 = S1{Value: 1}
-    var s2 = &S2{Value: 1}
-
-    var m1 Modifier = s1
-    var m2 Modifier = s2
-
-    m1.change()
-    m2.change()
-
-    var b = s1.Value == s2.Value
-    fmt.Printf(
-        "S1 Value = %d, S2 Value = %d, (S1 == S2) is %v",
-        s1.Value,
-        s2.Value,
-        b,
-    )
-    assert.Equal(t, s1.Value, s2.Value)
-}
-```
-
 ### 互斥器使用方式
 
 `sync.Mutex`和`sync.ReMutex`默认值是有效的，所以指向其指针是不必要的，所以无须使用`new`关键字创建指针。
 
-```go
-package main
-
-import "sync"
-
-func bad() {
-    mu := new(sync.Mutex)
-    mu.Lock()
-    defer mu.Unlock()
-    //...
-}
-
-func good() {
-    var mu sync.Mutex
-    mu.Lock()
-    defer mu.Unlock()
-    //...
-}
-```
-
 当结构体需要支持线程安全时，`sync.Mutex`和`sync.ReMutex`应该作为结构体的非指针字段，并且不应该将其直接嵌入到结构体中，因为`mutex`及其方法是该结构体的实现细节，应该对其调用者不可见。
-
-```go
-package main
-
-import "sync"
-
-type SMap struct {
-    //mu *sync.Mutex
-    // sync.Mutex
-    mu sync.Mutex
-
-    data map[string]string
-}
-
-func NewSMap() *SMap {
-    return &SMap{
-        data: make(map[string]string),
-    }
-}
-
-func (m *SMap) Get(k string) string {
-    m.mu.Lock()
-    defer m.mu.Unlock()
-
-    return m.data[k]
-}
-```
 
 ### 资源释放
 
 使用`defer`释放资源，如文件、锁、数据库连接等，使用其开销很小，并且可以增加代码的可读性。
 
-```go
-package main
-
-import "sync"
-
-type Counter struct {
-    mu      sync.Mutex
-    counter int
-}
-
-func badAdd() int {
-    c := Counter{}
-    c.mu.Lock()
-
-    if c.counter > 10 {
-        c.mu.Unlock()
-        return c.counter
-    }
-
-    c.counter++
-    ret := c.counter
-    c.mu.Unlock()
-    return ret
-}
-
-func goodAdd() int {
-    c := Counter{}
-    c.mu.Lock()
-    defer c.mu.Unlock()
-
-    if c.counter > 10 {
-        return c.counter
-    }
-    c.counter++
-    return c.counter
-}
-```
-
 ### 常量的使用
 
 ### 时间操作
-
----
-
-# 设计模式
-
-## 创建型
-
-## 结构型
-
-## 行为型
 
 ---
 
