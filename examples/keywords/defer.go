@@ -7,11 +7,16 @@ type Counter struct {
 	counter int
 }
 
-func badAdd() int {
-	c := Counter{}
+func NewCounter() *Counter {
+	return &Counter{
+		counter: 0,
+	}
+}
+
+func (c *Counter) BadAdd() int {
 	c.mu.Lock()
 
-	if c.counter > 10 {
+	if c.counter > 1000 {
 		c.mu.Unlock()
 		return c.counter
 	}
@@ -22,12 +27,11 @@ func badAdd() int {
 	return ret
 }
 
-func goodAdd() int {
-	c := Counter{}
+func (c *Counter) GoodAdd() int {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 
-	if c.counter > 10 {
+	if c.counter > 1000 {
 		return c.counter
 	}
 	c.counter++
