@@ -16,7 +16,7 @@ func NewK8sClient() (*kubernetes.Clientset, error) {
 
 	config, err := clientcmd.BuildConfigFromFlags("", *kubeconfig)
 	if err != nil {
-		panic(err)
+		panic(err.Error())
 	}
 
 	return kubernetes.NewForConfig(config)
