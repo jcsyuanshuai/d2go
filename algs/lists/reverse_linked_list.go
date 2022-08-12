@@ -6,10 +6,11 @@ type ListNode struct {
 }
 
 func ReverseList(head *ListNode) *ListNode {
+	// 节点为 nil 或者只有一个节点直接返回
 	if head == nil || head.Next == nil {
 		return head
 	}
-
+	// 每次递归返回原链中的最后一个节点
 	ret := ReverseList(head.Next)
 	head.Next.Next = head // 头节点置为尾节点
 	head.Next = nil       // 头节点后继置为空

@@ -1,10 +1,10 @@
-package algorithm
+package lru
 
 import "container/list"
 
 // 双向列表 + 哈希表
 
-type LRUCache struct {
+type Cache struct {
 	Cap   int
 	Len   int
 	cache map[int]*list.Element
@@ -16,15 +16,15 @@ type pair struct {
 	val int
 }
 
-func NewLRUCache(cap int) LRUCache {
-	return LRUCache{
+func NewCache(cap int) Cache {
+	return Cache{
 		Cap:   cap,
 		list:  list.New(),
 		cache: make(map[int]*list.Element),
 	}
 }
 
-func (lru *LRUCache) Get(key int) int {
+func (lru *Cache) Get(key int) int {
 	if e, ok := lru.cache[key]; ok {
 		lru.list.MoveToFront(e)
 		return e.Value.(pair).val
@@ -32,7 +32,7 @@ func (lru *LRUCache) Get(key int) int {
 	return -1
 }
 
-func (lru *LRUCache) Put(key, val int) int {
+func (lru *Cache) Put(key, val int) int {
 	if e, ok := lru.cache[key]; ok {
 		lru.list.MoveToFront(e)
 		oldVal := e.Value.(pair).val

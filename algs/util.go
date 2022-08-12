@@ -1,4 +1,4 @@
-package algorithm
+package algs
 
 func Min(x, y int) int {
 	if x > y {

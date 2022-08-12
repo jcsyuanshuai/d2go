@@ -2,7 +2,7 @@ package arrays
 
 import "sort"
 
-func containsDuplicate(nums []int) bool {
+func ContainsDuplicate(nums []int) bool {
 	return solution1(nums)
 }
 
