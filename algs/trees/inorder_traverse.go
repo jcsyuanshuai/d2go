@@ -4,7 +4,6 @@ func InorderTraverse(root *TreeNode) []int {
 	ret := make([]int, 0)
 
 	var traverse func(node *TreeNode)
-
 	traverse = func(node *TreeNode) {
 		if node == nil {
 			return
@@ -12,10 +11,8 @@ func InorderTraverse(root *TreeNode) []int {
 		traverse(node.Left)
 		ret = append(ret, node.Value)
 		traverse(node.Right)
-
 	}
 	traverse(root)
-
 	return ret
 }
 
