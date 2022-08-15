@@ -31,3 +31,29 @@ func LevelTraverse(root *TreeNode) [][]int {
 	}
 	return ret
 }
+
+func levelTraverse(root *TreeNode) [][]int {
+	ret := make([][]int, 0)
+	if root == nil {
+		return ret
+	}
+	q := make([]*TreeNode, 0)
+	q = append(q, root)
+
+	for i := 0; len(q) > 0; i++ {
+		ret := append(ret, []int{})
+		p := make([]*TreeNode, 0)
+		for j := 0; j < len(q); j++ {
+			e := q[j]
+			ret[i] = append(ret[i], e.Value)
+			if e.Left != nil {
+				p = append(p, e.Left)
+			}
+			if e.Right != nil {
+				p = append(p, e.Right)
+			}
+		}
+		q = p
+	}
+	return ret
+}
